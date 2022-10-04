@@ -5,9 +5,7 @@ let engine
 
 window.onload = () => {
     engine = new Engine()
-
     engine.start()
-    engine.resize()
 }
 
 window.onresize = () => {

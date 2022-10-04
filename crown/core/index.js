@@ -21,6 +21,7 @@ class Engine {
 
         this.shader.use()
 
+        this.resize()
         this._loop()
     }
 
@@ -34,15 +35,16 @@ class Engine {
     }
 
     _loop() {
-        const { gl } = this
+        const { gl, canvas } = this
 
-        gl.viewport(0, 0, this.canvas.width, this.canvas.height)
+        gl.viewport(0, 0, canvas.width, canvas.height)
         gl.clear(gl.COLOR_BUFFER_BIT)
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
 
-        gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0)
-        gl.enableVertexAttribArray(0)
+        const position = this.shader.attribute('a_position')
+        gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 0, 0)
+        gl.enableVertexAttribArray(position)
 
         gl.drawArrays(gl.TRIANGLES, 0, 3)
 
