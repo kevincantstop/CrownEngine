@@ -9,6 +9,7 @@ class Shader {
         const gl = GlUtils.gl
         this._name = name
         this.attributes = {}
+        this.uniforms = {}
 
         this.vShader = this._loadShader(vSrc, gl.VERTEX_SHADER)
         this.fShader = this._loadShader(fSrc, gl.FRAGMENT_SHADER)
@@ -16,6 +17,7 @@ class Shader {
         this.program = this._createProgram(this.vShader, this.fShader)
 
         this.attributes = this._detectAttributes()
+        this.uniforms = this._detectUniforms()
     }
 
     get name() { return this._name }
@@ -30,6 +32,13 @@ class Shader {
             throw new Error(`Unable to find attribute name: "${name}" in shader named "${this.name}"`)
         }
         return this.attributes[name]
+    }
+
+    uniform(name) {
+        if (Utils.isUndefined(this.uniforms[name])) {
+            throw new Error(`Unable to find uniform name: "${name}" in shader named "${this.name}"`)
+        }
+        return this.uniforms[name]
     }
 
     _loadShader(src, shaderType) {
@@ -76,6 +85,23 @@ class Shader {
                 break
             }
             ret[info.name] = gl.getAttribLocation(program, info.name)
+        }
+        return ret
+    }
+
+    _detectUniforms() {
+        const gl = GlUtils.gl
+        const { program } = this
+
+        const ret = {}
+        const count = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
+
+        for (let i = 0; i < count; i++) {
+            const info = gl.getActiveUniform(program, i)
+            if (!info) {
+                break
+            }
+            ret[info.name] = gl.getUniformLocation(program, info.name)
         }
         return ret
     }

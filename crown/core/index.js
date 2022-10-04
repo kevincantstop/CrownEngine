@@ -20,8 +20,6 @@ class Engine {
         this._loadShaders()
         this._createBuffer()
 
-        this.shader.use()
-
         this.resize()
         this._loop()
     }
@@ -54,12 +52,9 @@ class Engine {
             0,   0.5, 0,
             0.5, 0.5, 0
         ])
-        buffer.addAttributeInfo(new AttributeInfo(
-            this.shader.attribute('a_position'),
-            3,
-            0
-        ))
+        buffer.addAttributeInfo(new AttributeInfo(this.shader.attribute('a_position'), 3, 0))
         buffer.unbind()
+
         this.buffer = buffer
     }
 
@@ -79,6 +74,7 @@ class Engine {
             }
         `
         this.shader = new Shader('basic', vShaderSrc, fShaderSrc)
+        this.shader.use()
     }
 }
 
