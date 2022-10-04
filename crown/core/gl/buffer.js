@@ -1,13 +1,5 @@
 import GlUtils from "@core-gl/gl"
 
-class AttributeInfo {
-    constructor(location, size, offset) {
-        this.location = location
-        this.size = size
-        this.offset = offset
-    }
-}
-
 class Buffer {
     /**
      *
@@ -128,7 +120,4 @@ class Buffer {
     }
 }
 
-export {
-    AttributeInfo,
-    Buffer
-}
+export default Buffer

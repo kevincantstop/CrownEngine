@@ -1,6 +1,6 @@
 import GlUtils from "@core-gl/gl"
 import Shader from "@core-gl/shader"
-import { Buffer, AttributeInfo } from "@core-gl/buffer.js"
+import Buffer from "@core-gl/buffer"
 
 import Utils from "@crown/utils"
 
@@ -55,7 +55,11 @@ class Engine {
             0,   0.5, 0,
             0.5, 0.5, 0
         ])
-        buffer.addAttributeInfo(new AttributeInfo(this.shader.attribute('a_position'), 3, 0))
+        buffer.addAttributeInfo({
+            location: this.shader.attribute('a_position'),
+            size: 3,
+            offset: 0
+        })
         buffer.unbind()
 
         this.buffer = buffer
