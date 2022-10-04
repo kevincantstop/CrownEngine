@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@crown/*": ["./crown/*"],
+      "@core/*": ["./crown/core/*"],
+      "@utils/*": ["./crown/utils/*"],
+      "@core-gl/*": ["./crown/core/gl/*"]
+    }
+  }
+}
