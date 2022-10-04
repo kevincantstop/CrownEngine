@@ -55,13 +55,13 @@ class Buffer {
         this.stride = this.elementSize * this.typeSize
     }
 
-    bind(normalized) {
+    bind(normalized = false) {
         const { gl } = this
         gl.bindBuffer(this.targetBufferType, this.buffer)
 
         if (this.hasAttribs) {
             for (const attrib of this.attributes) {
-                gl.vertexAttribPointer(attrib.location, attrib.size, attrib.dataType, normalized, this.stride, attrib.offset * this.typeSize)
+                gl.vertexAttribPointer(attrib.location, attrib.size, this.dataType, normalized, this.stride, attrib.offset * this.typeSize)
                 gl.enableVertexAttribArray(attrib.location)
             }
         }
@@ -75,33 +75,19 @@ class Buffer {
         gl.bindBuffer(this.targetBufferType, null)
     }
 
-    setData(data) {
-        this.clearData()
-        this.appendData(data)
-    }
-
-    appendData(data) {
-        this.data = [...this.data, data]
-    }
-
-    clearData() {
-        this.data.length = 0
-    }
-
     addAttributeInfo(info) {
         this.hasAttribs = true
-        info.offset = this.elementSize
         this.attributes.push(info)
-        this.elementSize += info.size
-        this.stride = this.elementSize * this.typeSize
     }
 
-    upload() {
+    append(data) {
         const { gl } = this
-        gl.bindBuffer( this.targetBufferType, this.buffer )
+
+        this.data = [...this.data, ...data]
+        gl.bindBuffer(this.targetBufferType, this.buffer)
 
         let bufferData
-        switch ( this.dataType ) {
+        switch (this.dataType) {
             case gl.FLOAT:
                 bufferData = new Float32Array(this.data)
                 break
@@ -124,8 +110,7 @@ class Buffer {
                 bufferData = new Uint8Array(this.data)
                 break
         }
-
-        gl.bufferData(this.targetBufferType, bufferData, gl.STATIC_DRAW )
+        gl.bufferData(this.targetBufferType, bufferData, gl.STATIC_DRAW)
     }
 
     draw() {

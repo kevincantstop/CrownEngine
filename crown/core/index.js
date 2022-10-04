@@ -1,5 +1,6 @@
 import GlUtils from "@core-gl/gl"
 import Shader from "@core-gl/shader"
+import { Buffer, AttributeInfo } from "@core-gl/buffer.js"
 
 import Utils from "@crown/utils"
 
@@ -35,36 +36,30 @@ class Engine {
     }
 
     _loop() {
-        const { gl, canvas } = this
+        const { gl, canvas, buffer } = this
 
         gl.viewport(0, 0, canvas.width, canvas.height)
         gl.clear(gl.COLOR_BUFFER_BIT)
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer)
-
-        const position = this.shader.attribute('a_position')
-        gl.vertexAttribPointer(position, 3, gl.FLOAT, false, 0, 0)
-        gl.enableVertexAttribArray(position)
-
-        gl.drawArrays(gl.TRIANGLES, 0, 3)
+        buffer.bind()
+        buffer.draw()
 
         requestAnimationFrame(() => this._loop())
     }
 
     _createBuffer() {
-        const { gl } = this
-        const points = new Float32Array([
+        const buffer = new Buffer(3)
+        buffer.append([
             0,   0,   0,
             0,   0.5, 0,
             0.5, 0.5, 0
         ])
-
-        const buffer = gl.createBuffer()
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
-        gl.bufferData(gl.ARRAY_BUFFER, points, gl.STATIC_DRAW)
-        gl.bindBuffer(gl.ARRAY_BUFFER, null)
-
+        buffer.addAttributeInfo(new AttributeInfo(
+            this.shader.attribute('a_position'),
+            3,
+            0
+        ))
+        buffer.unbind()
         this.buffer = buffer
     }
 
