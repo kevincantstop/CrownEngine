@@ -39,6 +39,9 @@ class Engine {
         gl.viewport(0, 0, canvas.width, canvas.height)
         gl.clear(gl.COLOR_BUFFER_BIT)
 
+        const color = this.shader.uniform("u_color")
+        gl.uniform4f(color, 1, 0.5, 0, 1)
+
         buffer.bind()
         buffer.draw()
 
@@ -69,8 +72,10 @@ class Engine {
         const fShaderSrc = `
             precision mediump float;
             
+            uniform vec4 u_color;
+            
             void main() {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                gl_FragColor = u_color;
             }
         `
         this.shader = new Shader('basic', vShaderSrc, fShaderSrc)
